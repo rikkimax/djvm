@@ -1,6 +1,6 @@
 djvm
 ====
-Copyright 2015 James Mahler
+Copyright 2015 James Mahler  
 Licensed under the terms of the MIT license - See [LICENSE.txt](LICENSE.txt)
 
 Allows for access to Java JVM from D.  Provide D'esk interfaces as the C interaction into JNI is messy to say the least.  This is a slow work in progress and currently just constantly seg faults.  I'm hoping someone else have any an interest and be able to fix the .h -> .d issues.
