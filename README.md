@@ -15,7 +15,7 @@ Requirements:
 * Java VM (if using package manager, make sure to install -dev packages)
 * D
 
-Compiling:
+Compiling (For now I just do this in the source/djvm directory):
 * dmd -L/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server/libjvm.so djvm.d
 
 Running:
@@ -30,6 +30,7 @@ Work
 - [x] Port JNI example from C to D
 - [x] Get a jni.d that compiles
 - [ ] Fix seg faults
+- [ ] Figure out dub with linking options
 - [ ] Make pretty wrapper
 - [ ] Make pretty JDBC wrapper
 
