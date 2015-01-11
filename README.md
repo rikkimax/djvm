@@ -25,8 +25,10 @@ Issues
 ------
 Interacting with native libraries from D is not as easy as sometimes advertised.  You have to recreate the .h files into custom .d files.  The [source/djvm/jni.d](jni.d) file is where I believe the current issues lie.  It was auto-generated with dstep then hand edited.  It is no where close to complete or correct yet.  This is where I could use the most help.
 
-Future Work
------------
+Work
+----
+- [x] Port JNI example from C to D
+- [x] Get a jni.d that compiles
 - [ ] Fix seg faults
 - [ ] Make pretty wrapper
 - [ ] Make pretty JDBC wrapper
