@@ -2,6 +2,65 @@ import std.string;
 
 import jni;
 
+class JMethod {
+	private JavaVM* jvm;
+	private JNIEnv* env;
+	private jclass cls;
+	private jmethodID methodId;
+
+	this(JavaVM* jvm, JNIEnv* env, jclass cls, jmethodID methodId) {
+		this.jvm = jvm;
+		this.env = env;
+		this.cls = cls;
+		this.methodId = methodId;
+	}
+
+	// TODO template this to get all the types
+	// TODO vararg the last parameter
+	void callVoid(jobject obj, int value) {
+		(*env).CallVoidMethod(env, obj, methodId, value);
+	}
+}
+
+class JStaticField {
+	private JavaVM* jvm;
+	private JNIEnv* env;
+	private jclass cls;
+	private jfieldID fieldId;
+
+	this(JavaVM* jvm, JNIEnv* env, jclass cls, jfieldID fieldId) {
+		this.jvm = jvm;
+		this.env = env;
+		this.cls = cls;
+		this.fieldId = fieldId;
+	}
+
+	// TODO template this to get all the types
+	jobject getObject() {
+		return (*env).GetStaticObjectField(env, cls, fieldId);
+	}
+}
+
+class JClass {
+	private JavaVM* jvm;
+	private JNIEnv* env;
+	private jclass cls;
+
+	this(JavaVM* jvm, JNIEnv* env, jclass cls) {
+		this.jvm = jvm;
+		this.env = env;
+		this.cls = cls;
+	}
+
+	JStaticField getStaticField(string name, string signature) {
+		return new JStaticField(jvm, env, cls, (*env).GetStaticFieldID(env, cls, toStringz(name), toStringz(signature)));
+	}
+
+	JMethod getMethod(string name, string signature) {
+		return new JMethod(jvm, env, cls, (*env).GetMethodID(env, cls, toStringz(name), toStringz(signature)));
+	}
+}
+
 class DJvm {
 	private JavaVM* jvm;
 	private JNIEnv* env;
@@ -12,7 +71,7 @@ class DJvm {
 
 		JavaVMInitArgs vm_args;
 		JavaVMOption[] options = new JavaVMOption[1];
-		options[0].optionString = cast(char*) toStringz("-Djava.class.path=/usr/lib/java");
+		options[0].optionString = cast(char*) toStringz("-Djava.class.path=" ~ classpath);
 
 		vm_args.version_ = JNI_VERSION_1_6;
 		vm_args.nOptions = 1;
@@ -22,27 +81,8 @@ class DJvm {
 		JNI_CreateJavaVM(&jvm, cast(void**) &env, &vm_args);
 	}
 
-	jclass findClass(string name) {
-		return (*env).FindClass(env, toStringz(name));
-	}
-
-	jfieldID getStaticFieldID(jclass cls, string name, string signature) {
-		return (*env).GetStaticFieldID(env, cls, toStringz(name), toStringz(signature));
-	}
-
-	jmethodID getMethodID(jclass cls, string name, string signature) {
-		return (*env).GetMethodID(env, cls, toStringz(name), toStringz(signature));
-	}
-
-	// TODO template this to get all the types
-	jobject getStaticObjectField(jclass cls, jfieldID fieldId) {
-		return (*env).GetStaticObjectField(env, cls, fieldId);
-	}
-
-	// TODO template this to get all the types
-	// TODO vararg the last parameter
-	void callVoidMethod(jobject obj, jmethodID methodId, int value) {
-		(*env).CallVoidMethod(env, obj, methodId, value);
+	JClass findClass(string name) {
+		return new JClass(jvm, env, (*env).FindClass(env, toStringz(name)));
 	}
 
 	void destroyJvm() {
@@ -53,13 +93,14 @@ class DJvm {
 void main(string[] args) {
 	DJvm djvm = new DJvm("/usr/lib/java");
 
-	jclass systemCls = djvm.findClass("java/lang/System");
-	jclass printCls = djvm.findClass("java/io/PrintStream");
+	JClass systemCls = djvm.findClass("java/lang/System");
+	JClass printCls = djvm.findClass("java/io/PrintStream");
 
-	jfieldID fid = djvm.getStaticFieldID(systemCls, "out", "Ljava/io/PrintStream;");
-	jobject out_ = djvm.getStaticObjectField(systemCls, fid);
-	jmethodID mid = djvm.getMethodID(printCls, "println", "(I)V");
-	djvm.callVoidMethod(out_, mid, 100);
+	JStaticField field = systemCls.getStaticField("out", "Ljava/io/PrintStream;");
+	jobject obj = field.getObject();
+
+	JMethod method = printCls.getMethod("println", "(I)V");
+	method.callVoid(obj, 100);
 
 	djvm.destroyJvm();
 }
