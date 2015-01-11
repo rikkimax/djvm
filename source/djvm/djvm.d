@@ -1,5 +1,5 @@
-import std.stdio;
 import std.string;
+
 import jni;
 
 class DJvm {
@@ -23,7 +23,7 @@ class DJvm {
 	}
 
 	jclass findClass(string name) {
-		return (*env).FindClass(env, cast(const(char)*)toStringz(name));
+		return (*env).FindClass(env, toStringz(name));
 	}
 
 	jfieldID getStaticFieldID(jclass cls, string name, string signature) {
