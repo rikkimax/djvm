@@ -13,7 +13,7 @@ Getting Started
 ---------------
 Requirements:
 * Java VM (if using package manager, make sure to install -dev packages)
-* D
+* dmd
 
 Compiling (For now I just do this in the source/djvm directory):
 * dmd -L/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server/libjvm.so djvm.d
