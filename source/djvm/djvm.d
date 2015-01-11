@@ -2,30 +2,64 @@ import std.stdio;
 import std.string;
 import jni;
 
+class DJvm {
+	private JavaVM* jvm;
+	private JNIEnv* env;
+
+	this(string classpath) {
+		JavaVM *jvm;
+		JNIEnv *env;
+
+		JavaVMInitArgs vm_args;
+		JavaVMOption[] options = new JavaVMOption[1];
+		options[0].optionString = cast(char*) toStringz("-Djava.class.path=/usr/lib/java");
+
+		vm_args.version_ = JNI_VERSION_1_6;
+		vm_args.nOptions = 1;
+		vm_args.options = options.ptr;
+		vm_args.ignoreUnrecognized = false;
+
+		JNI_CreateJavaVM(&jvm, cast(void**) &env, &vm_args);
+	}
+
+	jclass findClass(string name) {
+		return (*env).FindClass(env, cast(const(char)*)toStringz(name));
+	}
+
+	jfieldID getStaticFieldID(jclass cls, string name, string signature) {
+		return (*env).GetStaticFieldID(env, cls, toStringz(name), toStringz(signature));
+	}
+
+	jmethodID getMethodID(jclass cls, string name, string signature) {
+		return (*env).GetMethodID(env, cls, toStringz(name), toStringz(signature));
+	}
+
+	// TODO template this to get all the types
+	jobject getStaticObjectField(jclass cls, jfieldID fieldId) {
+		return (*env).GetStaticObjectField(env, cls, fieldId);
+	}
+
+	// TODO template this to get all the types
+	// TODO vararg the last parameter
+	void callVoidMethod(jobject obj, jmethodID methodId, int value) {
+		(*env).CallVoidMethod(env, obj, methodId, value);
+	}
+
+	void destroyJvm() {
+		(*jvm).DestroyJavaVM(jvm);
+	}
+}
+
 void main(string[] args) {
-	JavaVM *jvm;
-	JNIEnv *env;
+	DJvm djvm = new DJvm("/usr/lib/java");
 
-        JavaVMInitArgs vm_args;
-        JavaVMOption[] options = new JavaVMOption[1];
-        options[0].optionString = cast(char*) toStringz("-Djava.class.path=/usr/lib/java");
+	jclass systemCls = djvm.findClass("java/lang/System");
+	jclass printCls = djvm.findClass("java/io/PrintStream");
 
-        vm_args.version_ = JNI_VERSION_1_6;
-        vm_args.nOptions = 1;
-        vm_args.options = options.ptr;
-        vm_args.ignoreUnrecognized = false;
+	jfieldID fid = djvm.getStaticFieldID(systemCls, "out", "Ljava/io/PrintStream;");
+	jobject out_ = djvm.getStaticObjectField(systemCls, fid);
+	jmethodID mid = djvm.getMethodID(printCls, "println", "(I)V");
+	djvm.callVoidMethod(out_, mid, 100);
 
-        JNI_CreateJavaVM(&jvm, cast(void**) &env, &vm_args);
-
-        jclass systemCls = (*env).FindClass(env, cast(const(char)*)toStringz("java/lang/System"));
-        jclass printCls = (*env).FindClass(env, "java/io/PrintStream");
-
-        jfieldID fid = (*env).GetStaticFieldID(env, systemCls, "out", "Ljava/io/PrintStream;");
-        jobject out_ = (*env).GetStaticObjectField(env, systemCls, fid);
-        jmethodID mid = (*env).GetMethodID(env, printCls, "println", "(I)V");
-        (*env).CallVoidMethod(env, out_, mid, 100);
-
-        (*jvm).DestroyJavaVM(jvm);
-
-	writeln("hello");
+	djvm.destroyJvm();
 }
