@@ -66,9 +66,6 @@ class DJvm {
 	private JNIEnv* env;
 
 	this(string classpath) {
-		JavaVM *jvm;
-		JNIEnv *env;
-
 		JavaVMInitArgs vm_args;
 		JavaVMOption[] options = new JavaVMOption[1];
 		options[0].optionString = cast(char*) toStringz("-Djava.class.path=" ~ classpath);
