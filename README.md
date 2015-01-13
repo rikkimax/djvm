@@ -3,7 +3,7 @@ djvm
 Copyright 2015 James Mahler  
 Licensed under the terms of the MIT license - See [LICENSE](LICENSE)
 
-Allows for access to Java JVM from D.  Provide D'esk interfaces as the C interaction into JNI is messy to say the least.  This is a slow work in progress and currently just constantly seg faults.  I'm hoping someone else have any an interest and be able to fix the .h -> .d issues.
+Allows for access to Java JVM from D.  Provide D'esk interfaces as the C interaction into JNI is messy to say the least.  This is a slow work in progress.
 
 Motivation
 ----------
@@ -21,15 +21,11 @@ Compiling (For now I just do this in the source/djvm directory):
 Running:
 * LD_LIBRARY_PATH=/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server ./djvm
 
-Issues
-------
-Interacting with native libraries from D is not as easy as sometimes advertised.  You have to recreate the .h files into custom .d files.  The [jni.d](source/djvm/jni.d) file is where I believe the current issues lie.  It was auto-generated with dstep then hand edited.  It is no where close to complete or correct yet.  This is where I could use the most help.
-
 Work
 ----
 - [x] Port JNI example from C to D
 - [x] Get a jni.d that compiles
-- [ ] Fix seg faults
+- [x] Fix seg faults
 - [ ] Figure out dub with linking options
 - [ ] Make pretty wrapper
 - [ ] Make pretty JDBC wrapper
