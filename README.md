@@ -21,12 +21,30 @@ Compiling (For now I just do this in the source/djvm directory):
 Running:
 * LD_LIBRARY_PATH=/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server ./djvm
 
+Example
+-------
+Here is an example usage of the D api:
+```
+DJvm djvm = new DJvm("");
+
+JClass systemCls = djvm.findClass("java/lang/System");
+JClass printCls = djvm.findClass("java/io/PrintStream");
+
+JStaticField field = systemCls.getStaticField("out", "Ljava/io/PrintStream;");
+jobject obj = field.getObject();
+
+JMethod method = printCls.getMethod("println", "(I)V");
+method.callVoid(obj, 100);
+
+djvm.destroyJvm();
+```
+
 Work
 ----
 - [x] Port JNI example from C to D
 - [x] Get a jni.d that compiles
 - [x] Fix seg faults
 - [ ] Figure out dub with linking options
-- [ ] Make pretty wrapper
+- [x] Make pretty wrapper
 - [ ] Make pretty JDBC wrapper
 
