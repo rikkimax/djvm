@@ -26,6 +26,9 @@ Example
 Here is an example usage of the D api:
 ```
 DJvm djvm = new DJvm("");
+scope(exit) {
+	djvm.destroyJvm();
+}
 
 JClass systemCls = djvm.findClass("java/lang/System");
 JClass printCls = djvm.findClass("java/io/PrintStream");
@@ -35,8 +38,6 @@ jobject obj = field.getObject();
 
 JMethod method = printCls.getMethod("println", "(I)V");
 method.callVoid(obj, 100);
-
-djvm.destroyJvm();
 ```
 
 Work
