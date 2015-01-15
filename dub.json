@@ -5,17 +5,48 @@
 	"authors" : ["James Mahler"],
 	"copyright" : "Copyright 2015 James Mahler",
 	"license" : "MIT",
-	"configurations" : [
-	{
-		"name" : "build",
-		"targetType" : "library",
-	},
-	{
-		"name" : "unittest",
-		"targetType" : "executable",
-		"sourcePaths" : ["test"],
-		"dflags-dmd" : ["-main"],
-		"lflags" : ["/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server/libjvm.so"]
-	}
-	]
+    "sourcePaths": [],
+    "subPackages": [
+        {
+    		"name": "bindings",
+            "targetType" : "library",
+            "targetPath": "bin",
+            "sourcePaths": ["source/bindings"],
+            "importPaths": ["source/bindings"],
+            "dependencies": {
+                "derelict-util": ">=1.9.0"
+            }
+        },
+		{
+    		"name": "wrappers",
+            "targetType" : "library",
+            "targetPath": "bin",
+            "sourcePaths": ["source/wrappers"],
+            "importPaths": ["source/wrappers"],
+            "dependencies": {
+                "djvm:bindings": "*"
+            }
+        },
+        {
+            "name": "test",
+            "targetType" : "executable",
+            "targetPath": "bin",
+            "sourcePaths" : ["source/test"],
+            "dflags-dmd" : ["-main"],
+            "dependencies": {
+                "djvm:wrappers": "*"
+            }
+        },
+        {
+            "name": "testshared",
+            "targetType" : "dynamicLibrary",
+            "targetPath": "bin",
+            "sourcePaths" : ["source/testShared"],
+            "copyFiles": ["source/testShared/JNIFoo.java"],
+            "dflags-dmd" : ["-main"],
+            "dependencies": {
+                "djvm:wrappers": "*"
+            }
+        }
+    ]
 }
