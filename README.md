@@ -24,7 +24,7 @@ Running:
 Example
 -------
 Here is an example usage of the D api:
-```
+```d
 DJvm djvm = new DJvm("");
 scope(exit) {
 	djvm.destroyJvm();
