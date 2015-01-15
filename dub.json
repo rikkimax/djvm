@@ -1,0 +1,22 @@
+{
+	"name" : "djvm",
+	"description" : "Allows for access to Java JVM from D.",
+	"homepage" : "https://github.com/jamesmahler/djvm",
+	"authors" : ["James Mahler"],
+	"copyright" : "Copyright 2015 James Mahler",
+	"license" : "MIT",
+	"configurations" : [
+	{
+		"name" : "build",
+		"targetType" : "executable",
+		"lflags" : ["/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server/libjvm.so"]
+	},
+	{
+		"name" : "unittest",
+		"targetType" : "executable",
+		"sourcePaths" : ["test"],
+		"dflags-dmd" : ["-main"],
+		"lflags" : ["/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server/libjvm.so"]
+	}
+	]
+}
