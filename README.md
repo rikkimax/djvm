@@ -45,7 +45,10 @@ Work
 - [x] Port JNI example from C to D
 - [x] Get a jni.d that compiles
 - [x] Fix seg faults
-- [ ] Figure out dub with linking options
+- [x] Use dub
+- [x] Unit tests using ByteBuffer to check bi-directional
+- [ ] Clean up dub to work on other boxes (this should be dmd sc.ini not in dub to do link flags)
 - [x] Make pretty wrapper
+- [ ] Tons of error handling (aka nulls on unsuccessful finds instead of segfaults on usage)
 - [ ] Make pretty JDBC wrapper
 
