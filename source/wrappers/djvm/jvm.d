@@ -196,19 +196,6 @@ final class DJvm {
 		bool hasInstance() {
 			return instance_ !is null;
 		}
-
-		/**
-		 * Joins 
-		 */
-		private DJvm joinToJVM(JavaVM* vm) {
-			if (hasInstance)
-				throw new AlreadyCreatedJVMException("JVM has already been created");
-
-			JNIEnv* env;
-			(*vm).GetEnv(vm, cast(void**)env, JNI_VERSION_1_6);
-
-			return new DJvm(vm, env);
-		}
 	}
 }
 
