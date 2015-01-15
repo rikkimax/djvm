@@ -28,16 +28,16 @@ private string generateFieldSets(string[] types, string extra) {
 	return rtn;
 }
 
-private string generateMethodCalls(string[] types, string extra, string argType) {
+private string generateMethodCalls(string[] types, string extra, string extraMethodArgs, string callArg) {
 	string rtn = "";
 	foreach (ref string type; types) {
-		rtn ~= getJtype(type) ~ " call" ~ type ~ "(" ~ argType ~ " arg, ...) {\n";
+		rtn ~= getJtype(type) ~ " call" ~ type ~ "(" ~ extraMethodArgs ~ "...) {\n";
 		rtn ~= "va_list args;\n";
 		rtn ~= "va_start(args, __va_argsave);\n";
 		if (type == "Void") {
-			rtn ~= "(*env).Call" ~ extra ~ type ~ "MethodV(env, arg, methodId, args);\n";
+			rtn ~= "(*env).Call" ~ extra ~ type ~ "MethodV(env, " ~ callArg	~ ", methodId, args);\n";
 		} else {
-			rtn ~= "return (*env).Call" ~ extra ~ type ~ "MethodV(env, arg, methodId, args);\n";
+			rtn ~= "return (*env).Call" ~ extra ~ type ~ "MethodV(env, " ~ callArg ~ ", methodId, args);\n";
 		}
 		rtn ~= "}\n";
 	}
@@ -59,7 +59,7 @@ class JMethod {
 		this.methodId = methodId;
 	}
 
-	mixin(generateMethodCalls(["Void", "Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "", "jobject"));
+	mixin(generateMethodCalls(["Void", "Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "", "jobject obj, ", "obj"));
 }
 
 class JStaticMethod {
@@ -75,7 +75,7 @@ class JStaticMethod {
 		this.methodId = methodId;
 	}
 
-	mixin(generateMethodCalls(["Void", "Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "Static", "jclass"));
+	mixin(generateMethodCalls(["Void", "Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "Static", "", "cls"));
 }
 
 
@@ -165,20 +165,4 @@ class DJvm {
 	void destroyJvm() {
 		(*jvm).DestroyJavaVM(jvm);
 	}
-}
-
-void main(string[] args) {
-	DJvm djvm = new DJvm("");
-	scope(exit) {
-		djvm.destroyJvm();
-	}
-
-	JClass systemCls = djvm.findClass("java/lang/System");
-	JClass printCls = djvm.findClass("java/io/PrintStream");
-
-	JStaticField field = systemCls.getStaticField("out", "Ljava/io/PrintStream;");
-	jobject obj = field.getObject();
-
-	JMethod method = printCls.getMethod("println", "(I)V");
-	method.callVoid(obj, 100);
 }
