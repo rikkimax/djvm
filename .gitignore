@@ -1,4 +1,2 @@
 .dub
 dub.selections.json
-djvm
-libdjvm.a
