@@ -233,10 +233,6 @@ struct JVMArguments {
 	//TODO: more JVM arguments!
 }
 
-/**
- * Do we need to initialize the D runtime from here?
- * Or deinitialize it?
- */
 extern(C) private @system {
 	jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 		if (!DJvm.hasInstance) {
@@ -249,6 +245,5 @@ extern(C) private @system {
 		return JNI_VERSION_1_6;
 	}
 
-	void JNI_OnUnload(JavaVM *vm, void *reserved) {
-	}
+	//void JNI_OnUnload(JavaVM *vm, void *reserved) {}
 }
