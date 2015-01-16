@@ -36,9 +36,10 @@ import core.stdc.stdarg;
  */
 
 final class JClass {
-	package JavaVM* jvm;
-	package JNIEnv* env;
-	package jclass cls;
+	package {
+		JavaVM* jvm;
+		JNIEnv* env; }
+	jclass cls;
 	
 	this(JavaVM* jvm, JNIEnv* env, jclass cls) {
 		this.jvm = jvm;

@@ -32,9 +32,9 @@ alias AlreadyCreatedJVMException = Exception;
  */
 final class DJvm {
 	package {
-		JavaVM* jvm;
+		JavaVM* jvm; }
 		JNIEnv* env;
-	}
+	//}
 
 	private static {
 		DJvm instance_;
@@ -220,17 +220,35 @@ struct JVMArguments {
 	//TODO: more JVM arguments!
 }
 
-extern(C) private @system {
+extern(System) export {
 	jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-		if (!DJvm.hasInstance) {
-			JNIEnv* env;
-			(*vm).GetEnv(vm, cast(void**)env, JNI_VERSION_1_6);
-		
-			DJvm inst = new DJvm(vm, env);
-		}
+		import core.runtime:Runtime;
+		Runtime.initialize();
 
 		return JNI_VERSION_1_6;
 	}
 
-	//void JNI_OnUnload(JavaVM *vm, void *reserved) {}
+	void JNI_OnUnload(JavaVM *vm, void *reserved) {
+		import core.runtime:Runtime;
+		Runtime.terminate();
+	}
+}
+
+shared static this() {
+	version(Windows) {
+		import std.stdio: stdin, stdout, stderr, File;
+		import core.sys.windows.windows: GetStdHandle, STD_INPUT_HANDLE, STD_OUTPUT_HANDLE, STD_ERROR_HANDLE;
+
+		File nstdin;
+		nstdin.windowsHandleOpen(GetStdHandle(STD_INPUT_HANDLE), ['r']);
+		stdin = nstdin;
+		
+		File nstdout;
+		nstdout.windowsHandleOpen(GetStdHandle(STD_OUTPUT_HANDLE), ['w']);
+		stdout = nstdout;
+		
+		File nstderr;
+		nstderr.windowsHandleOpen(GetStdHandle(STD_ERROR_HANDLE), ['w']);
+		stderr = nstderr;
+	}
 }
