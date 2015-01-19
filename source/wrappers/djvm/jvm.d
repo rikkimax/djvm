@@ -56,14 +56,15 @@ final class DJvm {
 	 * 		The class if found.
 	 */
 	JClass findClass(string name) {
-		return new JClass(jvm, env, (*env).FindClass(env, toStringz(name)));
+		import std.string : tr;
+		return new JClass(jvm, env, (*env).FindClass(env, toStringz(name.tr(".", "/"))));
 	}
 
 	/**
 	 * Explicitly destroys this VM instance.
 	 * 
 	 * Because of implemention limitations of the JVM, this should almost never be called.
-	 */
+	 */	
 	private void destroyJvm() {
 		(*jvm).DestroyJavaVM(jvm);
 	}

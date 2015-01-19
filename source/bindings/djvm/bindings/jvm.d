@@ -33,9 +33,9 @@ private {
 	import derelict.util.system;
 	
 	static if( Derelict_OS_Windows ) {
-		enum libNames = "jvm.dll";
+		enum libNames = "jvm.dll,libjvm.dll";
 	} else static if( Derelict_OS_Posix ) {
-		enum libNames = "libjvm.so";
+		enum libNames = "jvm.so,libjvm.so";
 	}
 	else
 		static assert( 0, "Need to implement lua libNames for this operating system." );
