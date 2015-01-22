@@ -86,16 +86,14 @@ final class DJvm {
 				return true;
 
 			bool loadIt(bool withArg=true) {
-				if (vmLoc != "") {
-					try {
-						if (withArg)
-							DerelictJvm.load(vmLoc);
-						else
-							DerelictJvm.load();
-						return true;
-					} catch(Error e) {
-					} catch(Exception e) {
-					}
+				try {
+					if (withArg)
+						DerelictJvm.load(vmLoc);
+					else
+						DerelictJvm.load();
+					return DerelictJvm.isLoaded;
+				} catch(Error e) {
+				} catch(Exception e) {
 				}
 				
 				return false;
