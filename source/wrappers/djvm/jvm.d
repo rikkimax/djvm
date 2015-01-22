@@ -99,6 +99,7 @@ final class DJvm {
 				return false;
 			}
 
+			if (vmLoc != "" && loadIt(true)) return true;
 			if (loadIt(false)) return true;
 
 			// fallback!
