@@ -69,10 +69,10 @@ final class JClass {
  */
 
 final class JField {
-	package JavaVM* jvm;
-	package JNIEnv* env;
-	package jclass cls;
-	package jfieldID fieldId;
+	package {JavaVM* jvm;
+		JNIEnv* env;
+		jclass cls; }
+	jfieldID fieldId;
 	
 	this(JavaVM* jvm, JNIEnv* env, jclass cls, jfieldID fieldId) {
 		this.jvm = jvm;
@@ -118,6 +118,8 @@ final class JMethod {
 		this.cls = cls;
 		this.methodId = methodId;
 	}
+
+	@property jmethodID methodID() { return methodId; }
 	
 	mixin(generateMethodCalls(["Void", "Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "", "jobject obj, ", "obj"));
 }

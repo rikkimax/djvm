@@ -29,10 +29,11 @@ import djvm;
 unittest {
 	DJvm djvm = DJvm.getInstance;
 	
-	JClass systemCls = djvm.findClass("java/lang/System");
-	JClass printCls = djvm.findClass("java/io/PrintStream");
+	JClass systemCls = djvm.findClass("java.lang.System");
+	JClass printCls = djvm.findClass("java.io.PrintStream");
 	
 	JStaticField field = systemCls.getStaticField("out", "Ljava/io/PrintStream;");
+
 	jobject obj = field.getObject();
 	
 	JMethod method = printCls.getMethod("println", "(I)V");

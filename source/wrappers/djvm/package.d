@@ -24,4 +24,5 @@
 module djvm;
 public import djvm.defs;
 public import djvm.jvm;
+public import djvm.bind;
 public import djvm.bindings.jvm;

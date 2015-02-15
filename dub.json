@@ -19,7 +19,7 @@
         },
 		{
     		"name": "wrappers",
-            "targetType" : "library",
+            "targetType" : "sourceLibrary",
             "targetPath": "bin",
             "sourcePaths": ["source/wrappers"],
             "importPaths": ["source/wrappers"],
@@ -43,7 +43,7 @@
             "targetPath": "bin",
             "sourcePaths" : ["source/testShared"],
             "copyFiles": ["source/testShared/JNIFoo.java"],
-            "dflags-dmd" : ["-main"],
+			"dflags": ["-gc", "-map", "-main"],
             "dependencies": {
                 "djvm:wrappers": "*"
             }

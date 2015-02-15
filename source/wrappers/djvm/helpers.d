@@ -36,6 +36,7 @@ package string getJtype(string type) pure {
 	return "j" ~ toLower(type);
 }
 
+// FIXME: currently only will work for static fields
 package string generateFieldGets(string[] types, string extra) pure {
 	string rtn = "";
 	foreach (ref string type; types) {

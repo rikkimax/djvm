@@ -27,8 +27,32 @@
 module Java_JNIFoo;
 import djvm;
 
-extern(System) export @system {
+void testfunc(JNIEnv* env) {
+	//writeln("Running unittest");
+	try {
+		import java.lang.String;
+		import std.stdio;
+		String str = new String("Hello there!");
+
+		writeln(str.charAt(0));
+	} catch(Error e) {
+		import std.file;
+		write("error.txt", e.toString());
+	} catch(Exception e) {
+		import std.file;
+		write("error.txt", e.toString());
+	}
+	//assert(str.charAt(0) == 'H');
+	//assert(str.charAt(5) == 'o');
+}
+
+extern(System)
+export {
 	jstring Java_JNIFoo_nativeFoo(JNIEnv* env, jobject obj) {
+		import core.runtime;
+		Runtime.initialize();
+
+		testfunc(env);
 		return (*env).NewStringUTF(env, "foo: Test program of JNI.\n\0");
 	}
 }

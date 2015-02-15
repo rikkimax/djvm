@@ -373,4 +373,31 @@ union jvalue
 	jfloat f;
 	jdouble d;
 	jobject l;
+
+	static jvalue fromValue(T)(T value) {
+		jvalue ret;
+
+		static if (is(T == bool))
+			ret.z = value;
+		else static if (is(T == byte))
+			ret.b = value;
+		else static if (is(T == char))
+			ret.b = value;
+		else static if (is(T == wchar))
+			ret.c = value;
+		else static if (is(T == short))
+			ret.s = value;
+		else static if (is(T == int))
+			ret.i = value;
+		else static if (is(T == long))
+			ret.j = value;
+		else static if (is(T == float))
+			ret.f = value;
+		else static if (is(T == double))
+			ret.d = value;
+		else
+			ret.l = value;
+
+		return ret;
+	}
 }

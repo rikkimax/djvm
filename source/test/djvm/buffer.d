@@ -29,7 +29,7 @@ import djvm;
 unittest {
 	DJvm djvm = DJvm.getInstance;
 
-	JClass bbCls = djvm.findClass("java/nio/ByteBuffer");
+	JClass bbCls = djvm.findClass("java.nio.ByteBuffer");
 
 	JStaticMethod allocate = bbCls.getStaticMethod("allocate", "(I)Ljava/nio/ByteBuffer;");
 	jobject buffer = allocate.callObject(1024);
